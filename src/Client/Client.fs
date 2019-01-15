@@ -83,6 +83,12 @@ let show = function
 | { Counter = Some counter } -> string counter.Value
 | { Counter = None   } -> "Loading..."
 
+
+let calc = function
+| { Counter = Some counter } -> string (counter.Value |> float |> Calculator.weight |> Calculator.kcl )
+| { Counter = None   } -> "Loading..."
+
+
 let button txt onClick =
     Button.button
         [ Button.IsFullWidth
@@ -95,11 +101,13 @@ let view (model : Model) (dispatch : Msg -> unit) =
         [ Navbar.navbar [ Navbar.Color IsPrimary ]
             [ Navbar.Item.div [ ]
                 [ Heading.h2 [ ]
-                    [ str "SAFE Template" ] ] ]
+                    [ str "Kalium chloride app" ] ] ]
 
           Container.container []
               [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
-                    [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
+                    [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ]
+                      Heading.h2 [] [ str (sprintf "Calculated kcl %s ml" (calc model)) ]
+                     ]
                 Columns.columns []
                     [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
                       Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
